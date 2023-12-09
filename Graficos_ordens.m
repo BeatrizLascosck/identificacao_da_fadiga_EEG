@@ -50,10 +50,10 @@ Fs=512;
 fftSize = 1024;
 canal = 12;
 
-% EIXO DE FREQUÊNCIA
+% EIXO DE FREQUÃŠNCIA
 vetor_eixo_freq = fftshift(-Fs/2:Fs/fftSize:Fs/2-Fs/fftSize);
 
-%GRÁFICO 0 A 100HZ
+%GRÃFICO 0 A 100HZ
 freq_inicial = 0;
 freq_final = 100;
 
@@ -62,7 +62,7 @@ indice_final = find(vetor_eixo_freq==freq_final);
 fids_0_100 = indice_inicial:indice_final;
 
 
-% ÍNDICES DOS INTERVALOS DE FREQUÊNCIA BAIXA, MÉDIA E ALTA
+% ÃNDICES DOS INTERVALOS DE FREQUÃŠNCIA BAIXA, MÃ‰DIA E ALTA
 z=[0 38 73 125];
 
 load('frequencias_estimulos.mat');
@@ -81,7 +81,7 @@ X=ordens(7);
 [nv,c] = size(X{1,1});
 
 %%
-% Inicialize a variável pre_proc_X_base
+% Inicialize a variÃ¡vel pre_proc_X_base
 pre_proc_X_base = cell(nv, c);
 
 %%
@@ -107,20 +107,20 @@ S=[];
 for v = 1:nv
     
     sinal = pre_proc_X_base{v,1};
-    % MATRIZ DE ESPECTRO DE FREQUÊNCIA
-    % Transformada Rápida de Fourier (FFT)
+    % MATRIZ DE ESPECTRO DE FREQUÃŠNCIA
+    % Transformada RÃ¡pida de Fourier (FFT)
     % Apenas do canal 12
     S(:,v)=fft(sinal(:,canal),fftSize);
    
 end
-% ESPECTRO DE POTÊNCIA MÉDIO 
-% Média de todos os voluntários para cada frequência de estímulo
+% ESPECTRO DE POTÃŠNCIA MÃ‰DIO 
+% MÃ©dia de todos os voluntÃ¡rios para cada frequÃªncia de estÃ­mulo
 base_med = abs(sum(S.^2,2)./nv);
 
 figure
 
 semilogy(freq_inicial:Fs/fftSize:freq_final,base_med(fids_0_100,1));
-title(['Média do sinal base']);
+title(['MÃ©dia do sinal base']);
 grid on;
 xlim([0 100]);
 
@@ -130,7 +130,7 @@ for fase = 1:6
     X=ordens(fase);
     [nv,nf] = size(X{1,1});
 
-  % PRÉ-PROCESSAMENTO
+  % PRÃ‰-PROCESSAMENTO
     pre_proc_X = cell(nv, nf);
 
     for indice_f = 1:nf
@@ -151,13 +151,6 @@ for fase = 1:6
 
             [nSamples,canais] = size(eeg_signal_car);
 
-            % Aplicando o filtro Notch
-%             wo = 50/(Fs/2);  % frequência central do filtro em 50 Hz
-%             bw = wo/10;  % largura de banda em 10 Hz
-%             [b,a] = iirnotch(wo,bw);
-%              for k = 1:canais
-%                 notch_signal(:,k) = filter(b, a, eeg_signal_car(:,k)); 
-%              end
              pre_proc_X{v, indice_f} = eeg_signal_car;
             
         end
@@ -167,24 +160,24 @@ for fase = 1:6
         S=[];
         for v = 1:nv
             sinal = pre_proc_X{v,indice_f};
-            % MATRIZ DE ESPECTRO DE FREQUÊNCIA
-            % Transformada Rápida de Fourier (FFT)
+            % MATRIZ DE ESPECTRO DE FREQUÃŠNCIA
+            % Transformada RÃ¡pida de Fourier (FFT)
             % Apenas do canal 12
             S(:,v)=fft(sinal(:,canal),fftSize);          
         end
-        % ESPECTRO DE POTÊNCIA MÉDIO 
-        % Média de todos os voluntários para cada frequência de estímulo
+        % ESPECTRO DE POTÃŠNCIA MÃ‰DIO 
+        % MÃ©dia de todos os voluntÃ¡rios para cada frequÃªncia de estÃ­mulo
        
         med(:,indice_f) = abs(sum(S.^2,2)./nv);
     end
     
-    %% MÉDIA DOS ESPECTROS DE POTÊNCIA DO INTERVALO
+    %% MÃ‰DIA DOS ESPECTROS DE POTÃŠNCIA DO INTERVALO
 
     for k = 1:length(z)-1
         Mmed(:,k) = sum(med(:,z(k)+1:z(k+1)),2)./(z(k+1)-z(k));  
     end
     
-    %% Criar o gráfico dos níveis de frequência
+    %% Criar o grÃ¡fico dos nÃ­veis de frequÃªncia
 
     nome_figura = sprintf('Figura_1_%d', fase);
     figure('Name', nome_figura);
@@ -194,25 +187,25 @@ for fase = 1:6
     semilogy(freq_inicial:Fs/fftSize:freq_final,base_med(fids_0_100,1));
  
    
-    xlabel('Frequência (Hz)');
-    ylabel('Magnitude (µV^2)');
-    %title(['Espectros de potência médios para os três níveis de frequência na Rodada ',num2str(fase)']);
-    %title(['Espectros de Potência na Rodada ',num2str(fase)']);
-    title(['Espectros de Potência na Ordem ',num2str(fase)']);
-    legend('Baixa Frequência', 'Média Frequência', 'Alta Frequência','Sem Estímulo');
+    xlabel('FrequÃªncia (Hz)');
+    ylabel('Magnitude (ÂµV^2)');
+    %title(['Espectros de potÃªncia mÃ©dios para os trÃªs nÃ­veis de frequÃªncia na Rodada ',num2str(fase)']);
+    %title(['Espectros de PotÃªncia na Rodada ',num2str(fase)']);
+    title(['Espectros de PotÃªncia na Ordem ',num2str(fase)']);
+    legend('Baixa FrequÃªncia', 'MÃ©dia FrequÃªncia', 'Alta FrequÃªncia','Sem EstÃ­mulo');
     grid on;
     xlim([0 100]);
 
 
-    %% GRÁFICO DE BARRAS PARA CADA RITMO
+    %% GRÃFICO DE BARRAS PARA CADA RITMO
 
-    % Índices das frequências das bandas de interesse
+    % Ãndices das frequÃªncias das bandas de interesse
     freq_delta = [1 4];  % Delta (1-4 Hz)
     freq_teta = [4 8];   % Teta (4-8 Hz)
     freq_alfa = [8 13];  % Alfa (8-13 Hz)
     freq_beta = [13 30]; % Beta (13-30 Hz)
 
-    % Calcular os índices correspondentes a cada frequência de interesse
+    % Calcular os Ã­ndices correspondentes a cada frequÃªncia de interesse
     indice_freq_delta = find(vetor_eixo_freq >= freq_delta(1) & vetor_eixo_freq <= freq_delta(2));
     indice_freq_teta = find(vetor_eixo_freq >= freq_teta(1) & vetor_eixo_freq <= freq_teta(2));
     indice_freq_alfa = find(vetor_eixo_freq >= freq_alfa(1) & vetor_eixo_freq <= freq_alfa(2));
@@ -221,14 +214,14 @@ for fase = 1:6
     ritmos = {'Delta', 'Teta', 'Alfa', 'Beta'};
     freq_indices = {indice_freq_delta, indice_freq_teta, indice_freq_alfa, indice_freq_beta};
 
-    % Plotar gráficos de barras por ritmo
+    % Plotar grÃ¡ficos de barras por ritmo
     ritmos_fase = [];
     ritmos_base = [];
     for ritmo_indice = 1:length(ritmos)
         ritmo = ritmos{ritmo_indice};
         indice_freq = freq_indices{ritmo_indice};
 
-        % Calcular a média do PSD para cada banda em cada nível de frequência
+        % Calcular a mÃ©dia do PSD para cada banda em cada nÃ­vel de frequÃªncia
         med_PSD_baixa = mean(Mmed(indice_freq(1):indice_freq(2), 1));
         med_PSD_media = mean(Mmed(indice_freq(1):indice_freq(2), 2));
         med_PSD_alta = mean(Mmed(indice_freq(1):indice_freq(2), 3));
@@ -237,7 +230,7 @@ for fase = 1:6
         
         y = [med_PSD_baixa med_PSD_media med_PSD_alta];
         
-        % Plotar o gráfico de barras
+        % Plotar o grÃ¡fico de barras
         nome_figura = sprintf('Figura_2_%d', fase);
         figure('Name', nome_figura);
 
@@ -248,13 +241,13 @@ for fase = 1:6
         b.CData(3,:) = [0.9290 0.6940 0.1250];
         
         xticklabels({'Baixa', 'Media', 'Alta'})
-        %title(['Média do ritmo ', ritmo, ' para os três níveis de frequência na Rodada ',num2str(fase)'])
+        %title(['MÃ©dia do ritmo ', ritmo, ' para os trÃªs nÃ­veis de frequÃªncia na Rodada ',num2str(fase)'])
         %title(['Ritmo ', ritmo, ' na Rodada ',num2str(fase)'])
         title(['Ritmo ', ritmo, ' na Ordem ',num2str(fase)'])
         
         hold on;
         base = plot([0, 4], [ritmo_base, ritmo_base], 'r-', 'Color', [0.5, 0, 0.5], 'LineWidth', 2);
-        legend([base], {'Sem Estímulo'})
+        legend([base], {'Sem EstÃ­mulo'})
         
         ritmo_BMA = [med_PSD_baixa,med_PSD_media,med_PSD_alta];
         ritmos_fase = vertcat(ritmos_fase, ritmo_BMA);
@@ -307,7 +300,7 @@ for fase = 1:6
     
     
     for indice = 1:3
-        % Plotar o gráfico de barras
+        % Plotar o grÃ¡fico de barras
 
         nome_figura = sprintf('Figura_3_%d', fase);
         figure('Name', nome_figura);
@@ -324,10 +317,10 @@ for fase = 1:6
         ind_numeric = indices_base(indice);
         
         base = plot([0, 4], [ind_numeric, ind_numeric], 'r-', 'Color', [0.5, 0, 0.5], 'LineWidth', 2);
-        legend([base], {'Sem Estímulo'})
+        legend([base], {'Sem EstÃ­mulo'})
         
         xticklabels({'Baixa', 'Media', 'Alta'})
-        %title(['Média do ritmo ', ritmo, ' para os três níveis de frequência na Rodada ',num2str(fase)'])
+        %title(['MÃ©dia do ritmo ', ritmo, ' para os trÃªs nÃ­veis de frequÃªncia na Rodada ',num2str(fase)'])
         %title(['Indice ', num2str(indice), ' na Rodada ',num2str(fase)'])
         title(['Indice ', num2str(indice), ' na Ordem ',num2str(fase)'])
         
@@ -349,9 +342,9 @@ for indice = 1:3
     nome_figura = sprintf('Figura_4_%d', indice);
     figure('Name', nome_figura);
     
-    %Gráfico de dispersão
+    %GrÃ¡fico de dispersÃ£o
     plot(y_Baixa, '-o');
-    hold on; % Mantém o gráfico atual ativo
+    hold on; % MantÃ©m o grÃ¡fico atual ativo
 
     plot(y_Media, '-s');
     plot(y_Alta, '-d');  
@@ -365,7 +358,7 @@ for indice = 1:3
     xticklabels({' ', 'R1',' ', 'R2', ' ', 'R3'});
     title(['Indice ', num2str(indice)]);
     
-    legend('Baixa Frequência', 'Média Frequência', 'Alta Frequência', 'Sem Estímulo');
+    legend('Baixa FrequÃªncia', 'MÃ©dia FrequÃªncia', 'Alta FrequÃªncia', 'Sem EstÃ­mulo');
     
 
 end
@@ -378,7 +371,7 @@ ritmos = {'Delta', 'Teta', 'Alfa', 'Beta'};
 for ritmo_idx = 1:length(ritmos)
     ritmo = ritmos{ritmo_idx};
     
-    % Use eval para criar variáveis com nomes dinâmicos
+    % Use eval para criar variÃ¡veis com nomes dinÃ¢micos
     eval([ritmo '_B = [', ritmo '_niveis_rodadas{1, 1}(1), ', ritmo '_niveis_rodadas{1, 2}(1), ', ritmo '_niveis_rodadas{1, 3}(1)];']);
     eval([ritmo '_M = [', ritmo '_niveis_rodadas{1, 1}(2), ', ritmo '_niveis_rodadas{1, 2}(2), ', ritmo '_niveis_rodadas{1, 3}(2)];']);
     eval([ritmo '_A = [', ritmo '_niveis_rodadas{1, 1}(3), ', ritmo '_niveis_rodadas{1, 2}(3), ', ritmo '_niveis_rodadas{1, 3}(3)];']);
@@ -389,7 +382,7 @@ for ritmo_idx = 1:length(ritmos)
 
     nome_figura = sprintf('Figura_5_%d', ritmo_idx);
     figure('Name', nome_figura);
-    % Gráfico de dispersão
+    % GrÃ¡fico de dispersÃ£o
     plot(y_Baixa, '-o');
     hold on;
     plot(y_Media, '-s');
@@ -402,7 +395,7 @@ for ritmo_idx = 1:length(ritmos)
     xticklabels({'R1', 'R2', 'R3'});
     title([ritmo]);
 
-    legend('Baixa Frequência', 'Média Frequência', 'Alta Frequência', 'Sem Estímulo');
+    legend('Baixa FrequÃªncia', 'MÃ©dia FrequÃªncia', 'Alta FrequÃªncia', 'Sem EstÃ­mulo');
   
 end
 
